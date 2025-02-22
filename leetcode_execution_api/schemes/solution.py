@@ -8,5 +8,5 @@ class Languages(Enum):
 
 class Solution(BaseModel):
     question_id: int
-    solution: str
+    code: str
     language: Languages

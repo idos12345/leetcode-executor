@@ -11,14 +11,12 @@ solution_router = APIRouter()
 @solution_router.post("/execute_solution")
 async def execute_solution(solution: Solution, db=Depends(get_db)) -> dict:
 
-    # Fetch question and tests by question_id
-    question = await get_question_by_id(solution.question_id, db)
+    # Fetch tests by question_id
     tests = await get_tests_by_question_by_id(solution.question_id, db)
 
     # Generate Docker image for testing
-    PythonImageGenerator().build_image(image_tag="abc",
-                                       question=question.code,
-                                       tests=[test.code for test in tests])
+    PythonImageGenerator().build_image(image_tag="abc", encoded_solution_code=solution.code,
+                                       encoded_tests_code=[test.code for test in tests])
     # Execute k8s task with the docker image
     # Retrieve answer
     # Return to client

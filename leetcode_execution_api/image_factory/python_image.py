@@ -10,6 +10,7 @@ class PythonImageGenerator(BaseImageGenerator):
         self.template = python_template
         self.dockerfile_content = python_dockerfile
 
-    def inject_code_to_test_script(self, solution, tests):
+    def inject_code_to_test_script(self, solution, test_list):
+        tests = "\n\n".join(test_list)
         test_script = self.template.substitute(solution=solution, tests=tests)
         return test_script
