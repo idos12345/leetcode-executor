@@ -20,3 +20,10 @@ class Test(Base):
     id = Column(Integer, primary_key=True, index=True)
     code = Column(String)
     question_id = Column(Integer, ForeignKey("question.id"))
+    language_id = Column(Integer, ForeignKey("language.id"))
+
+class Language(Base):
+    __tablename__ = "language"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String)
