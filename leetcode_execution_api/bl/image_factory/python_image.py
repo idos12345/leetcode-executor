@@ -1,6 +1,6 @@
-from leetcode_execution_api.image_factory.base_image import BaseImageGenerator
+from leetcode_execution_api.bl.image_factory.base_image import BaseImageGenerator
 from resources.docker_files.python.python_dockerfile import python_dockerfile
-from resources.excution_script_templates.python.python_executer import python_template
+from resources.excution_script_templates.python.python_executor import python_template
 
 
 class PythonImageGenerator(BaseImageGenerator):

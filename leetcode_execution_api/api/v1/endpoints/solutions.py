@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
+
+from leetcode_execution_api.bl.k8s_handler.k8s_job_executor import K8sJobExecutor
 from leetcode_execution_api.db.session import get_db
-from leetcode_execution_api.image_factory.python_image import PythonImageGenerator
+from leetcode_execution_api.bl.image_factory.python_image import PythonImageGenerator
 from leetcode_execution_api.schemes.solution import Solution
-from leetcode_execution_api.services.question_service import get_question_by_id
 from leetcode_execution_api.services.test_service import get_tests_by_question_by_id
 
 solution_router = APIRouter()
@@ -18,6 +19,8 @@ async def execute_solution(solution: Solution, db=Depends(get_db)) -> dict:
     PythonImageGenerator().build_image(image_tag="abc", encoded_solution_code=solution.code,
                                        encoded_tests_code=[test.code for test in tests])
     # Execute k8s task with the docker image
+    K8sJobExecutor().execute_job("abc")
+
     # Retrieve answer
     # Return to client
     return {"message": "Solution executed successfully"}

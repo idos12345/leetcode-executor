@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: execution-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: execution-container
+        image: $image_name:latest
+        imagePullPolicy: Never
+      restartPolicy: Never
+
