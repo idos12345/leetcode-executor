@@ -18,4 +18,5 @@ class Test(Base):
     __tablename__ = "test"
 
     id = Column(Integer, primary_key=True, index=True)
+    code = Column(String)
     question_id = Column(Integer, ForeignKey("question.id"))
