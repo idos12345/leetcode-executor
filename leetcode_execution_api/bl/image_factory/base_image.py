@@ -14,11 +14,21 @@ class BaseImageGenerator:
         self.template = None
         self.dockerfile_content = None
 
-    def build_image(self, image_tag, encoded_solution_code, encoded_tests_code):
+    def build_image(self, image_name:str, encoded_solution_code:str , encoded_tests_code:list[str]) -> None:
+        """
+        Build docker image for the solution
+        :param image_name: docker image name
+        :param encoded_solution_code: base64 encoded solution code
+        :param encoded_tests_code: base64 encoded tests code list
+        """
+
+        # Decode solution and tests
         decoded_solution_code = base64.b64decode(encoded_solution_code).decode("utf-8")
         decoded_tests_code = [base64.b64decode(test_code).decode("utf-8") for test_code in encoded_tests_code]
 
         script_content = self.inject_code_to_test_script(decoded_solution_code, decoded_tests_code)
+
+        # Build app in tmp dir
         with tempfile.TemporaryDirectory() as tmpdir:
             dockerfile_path = os.path.join(tmpdir, "Dockerfile")
             app_py_path = os.path.join(tmpdir, "test.py")
@@ -30,7 +40,7 @@ class BaseImageGenerator:
                 f.write(script_content)
 
             # Build the Docker image
-            image, _ = self.client.images.build(path=tmpdir, tag=image_tag)
+            image, _ = self.client.images.build(path=tmpdir, tag=image_name)
 
     @abstractmethod
     def inject_code_to_test_script(self, question, tests):

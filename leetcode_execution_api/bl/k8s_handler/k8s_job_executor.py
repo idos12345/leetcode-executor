@@ -6,10 +6,17 @@ from leetcode_execution_api.core.config import settings
 class K8sJobExecutor:
 
     def __init__(self):
-        pass
-
-    def execute_job(self, image_name, yaml_path=settings.K8S_JOB_YAML_PATH, namespace="default"):
         config.load_kube_config()
+
+    @staticmethod
+    def execute_job(image_name:str, yaml_path=settings.K8S_JOB_YAML_PATH, namespace="default") -> None:
+        """
+        Create and execute k8s job for image
+        :param image_name:
+        :param yaml_path:
+        :param namespace:
+        """
+
         with open(yaml_path, "r") as f:
             job_manifest = yaml.safe_load(f)
         k8s_api = client.BatchV1Api()  # Initialize Kubernetes Batch API

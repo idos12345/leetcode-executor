@@ -14,7 +14,13 @@ class K8sJobLogsFetcher:
         config.load_kube_config()
 
     @staticmethod
-    def fetch_logs(image_name, namespace="default"):
+    def fetch_logs(image_name:str, namespace="default") -> str:
+        """
+        Fetch logs from k8s job
+        :param image_name: docker image name
+        :param namespace: k8s namespace
+        :return:
+        """
         job_name = f"{image_name}-job"
 
         # Wait for job to end
@@ -28,8 +34,16 @@ class K8sJobLogsFetcher:
         return logs
 
     @staticmethod
-    def wait_for_job(job_name, namespace="default", max_time=60, poll_interval=1):
-        """Wait for a Kubernetes Job to complete with a max timeout."""
+    def wait_for_job(job_name:str, namespace="default", max_time=60, poll_interval=1):
+        """
+        Wait for a Kubernetes Job to complete with a max timeout.
+
+        :param job_name: k8s job name
+        :param namespace: k8s namespace
+        :param max_time: max wait time
+        :param poll_interval: poll interval
+        :return: True if job completed, False if job failed or timed out
+        """
         batch_v1 = client.BatchV1Api()
 
         start_time = time.time()
