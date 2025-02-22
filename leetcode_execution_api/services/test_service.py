@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from leetcode_execution_api.db.models import Question, Test
+from leetcode_execution_api.db.models import Test
 
 
 async def get_tests_by_question_by_id(question_id: int, db: AsyncSession):
