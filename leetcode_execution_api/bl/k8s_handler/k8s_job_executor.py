@@ -8,7 +8,7 @@ class K8sJobExecutor:
     def __init__(self):
         pass
 
-    def execute_job(self, image_name, yaml_path=settings.K8S_JOB_YAML_PATH):
+    def execute_job(self, image_name, yaml_path=settings.K8S_JOB_YAML_PATH, namespace="default"):
         config.load_kube_config()
         with open(yaml_path, "r") as f:
             job_manifest = yaml.safe_load(f)
@@ -16,7 +16,7 @@ class K8sJobExecutor:
         job = client.V1Job(
             api_version=job_manifest["apiVersion"],
             kind=job_manifest["kind"],
-            metadata=client.V1ObjectMeta(name=job_manifest["metadata"]["name"]),
+            metadata=client.V1ObjectMeta(name=f"{image_name}-job"),
             spec=client.V1JobSpec(
                 template=client.V1PodTemplateSpec(
                     spec=client.V1PodSpec(
@@ -40,4 +40,4 @@ class K8sJobExecutor:
         )
 
 
-        k8s_api.create_namespaced_job(namespace="default", body=job)
+        k8s_api.create_namespaced_job(namespace=namespace, body=job)
