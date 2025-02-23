@@ -1,5 +1,10 @@
 import argparse
 import base64
+import itertools
+import sys
+import threading
+import time
+
 import requests
 
 API_URL = "http://127.0.0.1:8000/execute_solution/"
@@ -10,6 +15,12 @@ def encode_file_to_base64(file_path):
     with open(file_path, "rb") as file:
         return base64.b64encode(file.read()).decode("utf-8")
 
+def spinner():
+    """Display a spinner while waiting for the API response."""
+    for char in itertools.cycle(["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]):
+        sys.stdout.write(f"\r⏳ Processing... {char}")
+        sys.stdout.flush()
+        time.sleep(0.1)
 
 def execute_solution(question_id, file_path, language):
     """Sends a POST request with the encoded code to the API."""
@@ -21,6 +32,7 @@ def execute_solution(question_id, file_path, language):
         "language": language
     }
 
+    print("\n⏳ Processing...\n")
     response = requests.post(API_URL, json=payload)
 
     if response.status_code == 200:
