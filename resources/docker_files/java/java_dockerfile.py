@@ -9,8 +9,8 @@ COPY . /app
 
 RUN wget -q https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.3/junit-platform-console-standalone-1.9.3.jar
 
-RUN javac -cp .:junit-platform-console-standalone-1.9.3.jar *.java
+RUN javac -cp .:junit-platform-console-standalone-1.9.3.jar TestSolution.java
 
-CMD ["java", "-jar", "junit-platform-console-standalone-1.9.3.jar", "--class-path", ".", "--scan-classpath"]
+CMD ["java", "-cp", ".:junit-platform-console-standalone-1.9.3.jar", "org.junit.platform.console.ConsoleLauncher", "--select-class", "TestSolution"]
 
 """

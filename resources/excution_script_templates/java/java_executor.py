@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Solution {
-    $solution
+$solution
 }
 
-public class DynamicTest {
-    $tests
+public class TestSolution {
+$tests
 }
 """)

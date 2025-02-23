@@ -3,7 +3,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY test.py .
+COPY TestSolution.py .
 
-CMD ["python", "-m", "unittest", "test.py"]
+CMD ["python", "-m", "unittest", "TestSolution.py"]
 """

@@ -6,7 +6,7 @@ import unittest
 class Solution:
     $solution
 
-class DynamicTest(unittest.TestCase):
+class TestSolution(unittest.TestCase):
     $tests
 
 if __name__ == "__main__":

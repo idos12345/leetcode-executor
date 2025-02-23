@@ -55,7 +55,7 @@ class ImageGenerator:
         # Build app in tmp dir
         with tempfile.TemporaryDirectory() as tmpdir:
             dockerfile_path = os.path.join(tmpdir, "Dockerfile")
-            app_py_path = os.path.join(tmpdir, f"test.{self.file_format}")
+            app_py_path = os.path.join(tmpdir, f"TestSolution.{self.file_format}")
 
             with open(dockerfile_path, "w") as f:
                 f.write(self.dockerfile_content)
