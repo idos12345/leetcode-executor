@@ -3,10 +3,7 @@ import tempfile
 import os
 from abc import abstractmethod
 from string import Template
-
-from django.templatetags.i18n import language
 from docker.client import from_env
-
 from resources.docker_files.java.java_dockerfile import java_dockerfile
 from resources.docker_files.python.python_dockerfile import python_dockerfile
 from resources.excution_script_templates.java.java_executor import java_template

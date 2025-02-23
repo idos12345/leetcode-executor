@@ -1,9 +1,6 @@
 import time
-
-from django.db.models.expressions import result
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from leetcode_execution_api.bl.image_factory.image_generator import ImageGenerator, image_generator_parameters
 from leetcode_execution_api.bl.k8s_handler.k8s_job_executor import K8sJobExecutor
 from leetcode_execution_api.bl.k8s_handler.k8s_job_logs_fetcher import K8sJobLogsFetcher
