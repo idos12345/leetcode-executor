@@ -4,19 +4,28 @@ A FastAPI-based service for executing coding solutions inside a Kubernetes envir
 
 ## 🚀 Installation & Usage
 
-### 1️⃣ Clone the Repository
+### 1️⃣ Launch Docker Desktop and Start Kubernetes
+
+Ensure Docker Desktop is running and Kubernetes is enabled.
+  
+### 2️⃣ Clone the Repository
 
 ```sh
 git clone https://github.com/idos12345/leetcode-executor.git
 ```
 
-### 2️⃣ Create a Virtual Environment
+### 3️⃣ Copy the `.env` File
+
+Copy the `.env` file to the project folder before running the application.
+
+
+### 4️⃣ Create a Virtual Environment
 
 ```sh
 python -m venv venv
 ```
 
-### 3️⃣ Activate the Virtual Environment
+### 5️⃣ Activate the Virtual Environment
 
 - **Windows**:
   ```sh
@@ -27,20 +36,20 @@ python -m venv venv
   source venv/bin/activate
   ```
 
-### 4️⃣ Install Dependencies
+### 6️⃣ Install Dependencies
 
 ```sh
 pip install -r requirements.txt
 ```
 
-### 5️⃣ Run the FastAPI Server in Development Mode
+### 7️⃣ Run the FastAPI Server in Development Mode
 
 ```sh
 cd leetcode_execution_api
 fastapi dev main.py
 ```
 
-### 6️⃣ Execute a Solution Using the CLI
+### 8️⃣ Execute a Solution Using the CLI
 
 ```sh
 cd ..
@@ -75,6 +84,3 @@ python cli.py 1 examples/bad_java_sol.txt java
   → Run: `pip install fastapi`
 - **Command 'fastapi' not found**\
   → Ensure the virtual environment is activated before running commands.
-
-
-
