@@ -15,13 +15,6 @@ def encode_file_to_base64(file_path):
     with open(file_path, "rb") as file:
         return base64.b64encode(file.read()).decode("utf-8")
 
-def spinner():
-    """Display a spinner while waiting for the API response."""
-    for char in itertools.cycle(["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]):
-        sys.stdout.write(f"\r⏳ Processing... {char}")
-        sys.stdout.flush()
-        time.sleep(0.1)
-
 def execute_solution(question_id, file_path, language):
     """Sends a POST request with the encoded code to the API."""
     encoded_code = encode_file_to_base64(file_path)
