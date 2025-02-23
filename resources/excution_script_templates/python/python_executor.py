@@ -4,10 +4,10 @@ python_template = Template("""
 import unittest
 
 class Solution:
-    $solution
+$solution
 
 class TestSolution(unittest.TestCase):
-    $tests
+$tests
 
 if __name__ == "__main__":
     unittest.main()

@@ -16,8 +16,8 @@ image_generator_parameters = {
     "python": {
         "code_template": python_template,
         "dockerfile": python_dockerfile,
-        "tests_seperator": "\n\r    ",
-        "format": "py"
+        "tests_seperator": "\n\r",
+        "file_format": "py"
     },
     "java": {
         "code_template": java_template,
@@ -65,6 +65,11 @@ class ImageGenerator:
 
             # Build the Docker image
             image, _ = self.client.images.build(path=tmpdir, tag=image_name)
+    @staticmethod
+    def indent_string(text: str, spaces: int = 4) -> str:
+        """Indents a given string by a specified number of spaces (default: 4)."""
+        indentation = " " * spaces
+        return "\n".join(indentation + line for line in text.splitlines())
 
     def inject_code_to_test_script(self, solution_code: str, tests_code_list: list[str]) -> str:
         """
@@ -74,5 +79,5 @@ class ImageGenerator:
         :return: injected test script
         """
         tests = self.tests_seperator.join(tests_code_list)
-        test_script = self.code_template.substitute(solution=solution_code, tests=tests)
+        test_script = self.code_template.substitute(solution=self.indent_string(solution_code), tests=self.indent_string(tests))
         return test_script

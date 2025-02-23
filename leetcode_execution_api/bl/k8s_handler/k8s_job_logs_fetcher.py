@@ -34,7 +34,7 @@ class K8sJobLogsFetcher:
         return logs
 
     @staticmethod
-    def wait_for_job(job_name:str, namespace="default", max_time=60, poll_interval=1):
+    def wait_for_job(job_name:str, namespace="default", max_time=150, poll_interval=3):
         """
         Wait for a Kubernetes Job to complete with a max timeout.
 
@@ -49,10 +49,11 @@ class K8sJobLogsFetcher:
         start_time = time.time()
         while time.time() - start_time < max_time:
             job = batch_v1.read_namespaced_job_status(name=job_name, namespace=namespace).status
-            if job.succeeded:
+            if job.succeeded or (job.failed and job.failed == 1):
                 return True  # Job completed
-            if job.failed and job.failed > 0:
+            if job.failed and job.failed > 1:
                 return False  # Job failed
+
             time.sleep(poll_interval)
 
         return False  # Timeout reached
