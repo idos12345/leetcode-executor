@@ -1,7 +1,11 @@
-FROM python:3.12
+FROM python:3.10
 
 WORKDIR /leetcode_execution_api
 COPY . /leetcode_execution_api
+
+# # For local usage
+ENV http_proxy=http://7.182.101.51:3128
+ENV https_proxy=http://7.182.101.51:3128
 
 # Ensure system packages are updated
 RUN apt-get update && apt-get install -y python3-setuptools && rm -rf /var/lib/apt/lists/*

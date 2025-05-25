@@ -3,11 +3,12 @@ import tempfile
 import os
 from abc import abstractmethod
 from string import Template
-from docker.client import from_env
+import docker
 from resources.docker_files.java.java_dockerfile import java_dockerfile
 from resources.docker_files.python.python_dockerfile import python_dockerfile
 from resources.excution_script_templates.java.java_executor import java_template
 from resources.excution_script_templates.python.python_executor import python_template
+from docker.errors import BuildError, APIError
 
 image_generator_parameters = {
     "python": {
@@ -29,7 +30,7 @@ image_generator_parameters = {
 class ImageGenerator:
 
     def __init__(self, code_template: Template, dockerfile: str, file_format: str, tests_seperator):
-        self.client = from_env()
+        self.client = docker.from_env()
         self.code_template = code_template
         self.dockerfile_content = dockerfile
         self.tests_seperator = tests_seperator
@@ -49,6 +50,9 @@ class ImageGenerator:
 
         script_content = self.inject_code_to_test_script(decoded_solution_code, decoded_tests_code)
 
+        local_registry = 'localhost:5000'
+        image_full_name = f'{local_registry}/{image_name}:latest'
+
         # Build app in tmp dir
         with tempfile.TemporaryDirectory() as tmpdir:
             dockerfile_path = os.path.join(tmpdir, "Dockerfile")
@@ -61,7 +65,26 @@ class ImageGenerator:
                 f.write(script_content)
 
             # Build the Docker image
-            image, _ = self.client.images.build(path=tmpdir, tag=image_name)
+            try:
+                image, logs = self.client.images.build(path=tmpdir, tag=f"{image_name}:latest")
+                print("✅ Build succeeded!")
+                print("Image ID:", image.id)
+            except BuildError as e:
+                print("❌ Build failed!")
+                for line in e.build_log:
+                    print(line.get('stream', ''), end='')
+            except APIError as e:
+                print("❌ Docker API error:", str(e))
+
+            
+            # Tag the image for local registry
+            image.tag(image_full_name)
+
+            # Push the image to local registry
+            push_logs = self.client.images.push(image_full_name, stream=True, decode=True)
+            for log in push_logs:
+                print(log)
+
     @staticmethod
     def indent_string(text: str, spaces: int = 4) -> str:
         """Indents a given string by a specified number of spaces (default: 4)."""
@@ -77,4 +100,6 @@ class ImageGenerator:
         """
         tests = self.tests_seperator.join(tests_code_list)
         test_script = self.code_template.substitute(solution=self.indent_string(solution_code), tests=self.indent_string(tests))
+        print("Test script:")
+        print(test_script)
         return test_script

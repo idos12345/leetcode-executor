@@ -30,7 +30,7 @@ class K8sJobExecutor:
                         containers=[
                             client.V1Container(
                                 name=job_manifest["spec"]["template"]["spec"]["containers"][0]["name"],
-                                image=f"{image_name}:latest",
+                                image=f"7.182.100.117:5000/{image_name}:latest",
                                 image_pull_policy=job_manifest["spec"]["template"]["spec"]["containers"][0]["imagePullPolicy"],
                                 env=[
                                     client.V1EnvVar(

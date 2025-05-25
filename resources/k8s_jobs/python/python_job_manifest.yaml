@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: execution-container
-        image: $image_name:latest
-        imagePullPolicy: Never
+        image: registry:5000/$image_name:latest
+        imagePullPolicy: IfNotPresent
       restartPolicy: Never
 
