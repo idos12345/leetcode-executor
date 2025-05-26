@@ -11,7 +11,7 @@ from leetcode_execution_api.core.config import settings
 class K8sJobLogsFetcher:
 
     def __init__(self):
-        config.load_kube_config()
+       config.load_incluster_config()
 
     @staticmethod
     def fetch_logs(image_name:str, namespace="default") -> str:

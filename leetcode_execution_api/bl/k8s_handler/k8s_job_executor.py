@@ -6,7 +6,7 @@ from leetcode_execution_api.core.config import settings
 class K8sJobExecutor:
 
     def __init__(self):
-        config.load_kube_config()
+        config.load_incluster_config()
 
     @staticmethod
     def execute_job(image_name:str, yaml_path=settings.K8S_JOB_YAML_PATH, namespace="default") -> None:

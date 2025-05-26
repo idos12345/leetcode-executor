@@ -80,6 +80,8 @@ class ImageGenerator:
             # Tag the image for local registry
             image.tag(image_full_name)
 
+            print(f"Image tagged as {image_full_name}")
+
             # Push the image to local registry
             push_logs = self.client.images.push(image_full_name, stream=True, decode=True)
             for log in push_logs:

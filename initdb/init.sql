@@ -31,4 +31,4 @@ INSERT INTO question (code) VALUES
 -- Insert some static tests
 INSERT INTO test (code, question_id, language_id) VALUES
   ('ZGVmIHRlc3RfYWRkXzIoc2VsZik6DQoJc29sID0gU29sdXRpb24oKQ0KCXNlbGYuYXNzZXJ0RXF1YWwoc29sLmFkZCg2LCAzKSwgOSk=', 1, 1),  -- Python test for question 1
-  ('QFRlc3QNCnB1YmxpYyBpbnQgYWRkKGludCBhLCBpbnQgYil7DQoJcmV0dXJuIGEgKyBiOw0KfQ==', 1, 2)  -- Java test for question 1
+  ('QFRlc3QNCnB1YmxpYyB2b2lkIHRlc3RTdW1Qb3NpdGl2ZU51bWJlcnMoKSB7DQoJU29sdXRpb24gcyA9IG5ldyBTb2x1dGlvbigpOw0KCWFzc2VydEVxdWFscyg1LCBzLmFkZCgyLCAzKSk7DQp9', 1, 2)  -- Java test for question 1

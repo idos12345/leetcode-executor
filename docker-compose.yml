@@ -13,6 +13,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ~/.kube:/root/.kube
       - ./kubeconfig-container.yaml:/root/.kube/config
+    envFrom:
+      - configMapRef:
+          name: leetcode-executor-config
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - KUBECONFIG=/root/.kube/config

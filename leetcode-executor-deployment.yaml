@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leetcode-executor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leetcode-executor
+  template:
+    metadata:
+      labels:
+        app: leetcode-executor
+    spec:
+      serviceAccountName: job-creator
+      containers:
+        - name: leetcode-executor
+          image: leetcode-executor:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+          env:
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+            - name: HTTP_PROXY
+              value: ""
+            - name: HTTPS_PROXY
+              value: ""
+            - name: http_proxy
+              value: ""
+            - name: https_proxy
+              value: ""
+            - name: DATABASE_URL
+              value: postgresql+asyncpg://admin:root@postgres-service:5432/test_db
+            - name: K8S_JOB_YAML_PATH
+              value: resources/k8s_jobs/python/python_job_manifest.yaml
+            
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: leetcode-executor-service
+spec:
+  selector:
+    app: leetcode-executor
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30080
+  type: NodePort
