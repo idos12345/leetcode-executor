@@ -1,0 +1,10 @@
+FROM openjdk:17-slim
+
+ENV http_proxy=http://7.182.101.51:3128
+ENV https_proxy=http://7.182.101.51:3128
+
+RUN apt-get update && apt-get install -y wget
+
+RUN wget --no-check-certificate -q https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.0/junit-platform-console-standalone-1.10.0.jar
+
+RUN mkdir /jars && mv junit-platform-console-standalone-1.10.0.jar /jars/
