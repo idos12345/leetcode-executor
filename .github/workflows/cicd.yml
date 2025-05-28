@@ -1,4 +1,4 @@
-# .github/workflows/ci-cd.yml
+# .github/workflows/cicd.yml
 name: CI/CD Pipeline
 
 # Grant minimal permissions so we can push to GHCR
@@ -38,8 +38,7 @@ jobs:
           flake8 app tests --max-line-length=88
 
       - name: Run tests
-        run: 
-          run: python -m unittest discover -s tests
+        run: python -m unittest discover -s tests
 
   push:
     needs: build-and-test
