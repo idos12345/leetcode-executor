@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: leetcode-executor-config
+data:
+  DOCKER_HOST: unix:///var/run/docker.sock
+  HTTP_PROXY: ""
+  HTTPS_PROXY: ""
+  http_proxy: ""
+  https_proxy: ""
+  DATABASE_URL: postgresql+asyncpg://admin:root@postgres-service:5432/test_db
+  K8S_JOB_YAML_PATH: resources/k8s_jobs/python/python_job_manifest.yaml
+  REGISTRY_URL: "7.182.100.117:500"

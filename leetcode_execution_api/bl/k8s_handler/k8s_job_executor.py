@@ -2,7 +2,6 @@ import yaml
 from kubernetes import client, config
 from leetcode_execution_api.core.config import settings
 
-
 class K8sJobExecutor:
 
     def __init__(self):
@@ -30,7 +29,7 @@ class K8sJobExecutor:
                         containers=[
                             client.V1Container(
                                 name=job_manifest["spec"]["template"]["spec"]["containers"][0]["name"],
-                                image=f"7.182.100.117:5000/{image_name}:latest",
+                                image=f"{settings.REGISTRY_URL}/{image_name}:latest",
                                 image_pull_policy=job_manifest["spec"]["template"]["spec"]["containers"][0]["imagePullPolicy"],
                                 env=[
                                     client.V1EnvVar(

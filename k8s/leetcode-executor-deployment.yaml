@@ -21,28 +21,31 @@ spec:
             - containerPort: 8000
           volumeMounts:
             - name: docker-sock
-              mountPath: /var/run/docker.sock
-          env:
-            - name: DOCKER_HOST
-              value: unix:///var/run/docker.sock
-            - name: HTTP_PROXY
-              value: ""
-            - name: HTTPS_PROXY
-              value: ""
-            - name: http_proxy
-              value: ""
-            - name: https_proxy
-              value: ""
-            - name: DATABASE_URL
-              value: postgresql+asyncpg://admin:root@postgres-service:5432/test_db
-            - name: K8S_JOB_YAML_PATH
-              value: resources/k8s_jobs/python/python_job_manifest.yaml
-            
+              mountPath: /var/run
+          envFrom:
+            - configMapRef:
+                name: leetcode-executor-config
+        - name: dind
+          image: docker:dind
+          securityContext:
+            privileged: true
+          args: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run 
+            - name: dind-daemon-config
+              mountPath: /etc/docker/daemon.json
+              subPath: daemon.json  # Important so it mounts as a file
+          envFrom:
+            - configMapRef:
+                name: docker-sidecar-config
       volumes:
         - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
-
+          emptyDir: {}
+        - name: dind-daemon-config
+          configMap:
+            name: dind-daemon-config
+0
 ---
 apiVersion: v1
 kind: Service

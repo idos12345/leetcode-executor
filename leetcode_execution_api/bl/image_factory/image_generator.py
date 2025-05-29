@@ -9,7 +9,7 @@ from resources.docker_files.python.python_dockerfile import python_dockerfile
 from resources.excution_script_templates.java.java_executor import java_template
 from resources.excution_script_templates.python.python_executor import python_template
 from docker.errors import BuildError, APIError
-
+from leetcode_execution_api.core.config import settings
 image_generator_parameters = {
     "python": {
         "code_template": python_template,
@@ -50,7 +50,7 @@ class ImageGenerator:
 
         script_content = self.inject_code_to_test_script(decoded_solution_code, decoded_tests_code)
 
-        local_registry = 'localhost:5000'
+        local_registry = settings.REGISTRY_URL
         image_full_name = f'{local_registry}/{image_name}:latest'
 
         # Build app in tmp dir
@@ -73,8 +73,10 @@ class ImageGenerator:
                 print("❌ Build failed!")
                 for line in e.build_log:
                     print(line.get('stream', ''), end='')
+                raise e
             except APIError as e:
                 print("❌ Docker API error:", str(e))
+                raise e
 
             
             # Tag the image for local registry
