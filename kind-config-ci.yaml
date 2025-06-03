@@ -8,5 +8,5 @@ nodes:
     protocol: TCP
 containerdConfigPatches:
 - |-
-  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."${{ env.HOST_IP }}:5000"]
-    endpoint = ["http://${{ env.HOST_IP }}:5000"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."${HOST_IP}:5000"]
+    endpoint = ["http://${HOST_IP}:5000"]
