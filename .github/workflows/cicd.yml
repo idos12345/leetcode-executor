@@ -74,7 +74,22 @@ jobs:
       - name: Generate kind config with actual IP
         run: |
           cat <<EOF > kind-config-ci.yaml
+          kind: Cluster
+          apiVersion: kind.x-k8s.io/v1alpha4
+          nodes:
+          - role: control-plane
+            extraPortMappings:
+            - containerPort: 30080
+              hostPort: 8080
+              protocol: TCP
+          containerdConfigPatches:
+          - |-
+            [plugins."io.containerd.grpc.v1.cri".registry.mirrors."${HOST_IP}:5000"]
+              endpoint = ["http://${HOST_IP}:5000"]
+          EOF
+
           cat kind-config-ci.yaml
+
       - name: Create kind cluster with kind-config-ci
         run: |
           kind create cluster --config kind-config-ci.yaml
