@@ -71,8 +71,8 @@ jobs:
 
       - name: Build and load Docker image
         run: |
-          docker build -t leetcode_executor:latest .
-          kind load docker-image leetcode_executor:latest
+          docker build -t leetcode-executor:latest .
+          kind load docker-image leetcode-executor:latest
 
       - name: Install app with Helm
         run: |
