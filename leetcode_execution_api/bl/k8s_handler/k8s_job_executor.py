@@ -1,7 +1,7 @@
 import yaml
 from kubernetes import client, config
 from leetcode_execution_api.core.config import settings
-from leetcode_execution_api.core import constans
+from leetcode_execution_api import constants
 
 
 class K8sJobExecutor:
@@ -11,7 +11,7 @@ class K8sJobExecutor:
 
     @staticmethod
     def execute_job(
-        image_name: str, yaml_path=constans.K8S_JOB_YAML_PATH, namespace="default"
+        image_name: str, yaml_path=constants.K8S_JOB_YAML_PATH, namespace="default"
     ) -> None:
         """
         Create and execute k8s job for image

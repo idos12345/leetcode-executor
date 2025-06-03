@@ -1,0 +1,34 @@
+# postgres-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.database.POSTGRES_USER }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.database.POSTGRES_PASSWORD }}
+            - name: POSTGRES_DB
+              value: {{ .Values.database.POSTGRES_DB }}
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: initdb
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: initdb
+          configMap:
+            name: initdb-sql

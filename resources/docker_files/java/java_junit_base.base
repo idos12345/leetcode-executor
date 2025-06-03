@@ -8,3 +8,6 @@ RUN apt-get update && apt-get install -y wget
 RUN wget --no-check-certificate -q https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.0/junit-platform-console-standalone-1.10.0.jar
 
 RUN mkdir /jars && mv junit-platform-console-standalone-1.10.0.jar /jars/
+
+ENV http_proxy=""
+ENV https_proxy=""
