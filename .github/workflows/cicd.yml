@@ -95,7 +95,12 @@ jobs:
         run: pytest tests/e2e/ || echo test failed but continuing...
 
       - name: Print logs
-        run: kubectl logs -l app=leetcode-executor -n default || echo "No logs available"
+        run: | 
+          kubectl logs -l app=leetcode-executor -n default
+          kubectl get pods
+          kubectl describe pods 
+          curl localhost:5000/v2/_catalog
+
       
 
   push:
