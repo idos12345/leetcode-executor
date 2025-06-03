@@ -96,7 +96,7 @@ jobs:
 
       - name: Print logs
         run: | 
-          kubectl logs -l app=leetcode-executor -n default
+          kubectl logs -l app=leetcode-executor -n default --tail=-1 --timestamps
           kubectl get pods
           kubectl describe pods 
           curl localhost:5000/v2/_catalog
