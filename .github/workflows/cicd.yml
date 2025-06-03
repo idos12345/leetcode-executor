@@ -69,7 +69,7 @@ jobs:
 
       - name: Get CI host (docker0) IP
         run: |
-          HOST_IP=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+          HOST_IP=$(ip route get 1 | awk '{print $7; exit}')
           echo "HOST_IP=$HOST_IP" >> $GITHUB_ENV
       - name: Create kind cluster with kind-config-ci
         run: |
@@ -85,8 +85,8 @@ jobs:
 
       - name: Install app with Helm
         run: |
-          helm install my-app ./chart -f ./chart/values-ci.yaml -n default --wait --timeout 2m
-          --set registry.url=${{ env.HOST_IP }}:5000
+          helm install my-app ./chart -f ./chart/values-ci.yaml -n default --wait --timeout 2m \
+          --set registry.url=${{ env.HOST_IP }}:5000 \
           --set docker.insecureRegistry=${{ env.HOST_IP }}:5000 || echo "Helm failed but continuing..."
       - name: Debug Pod Status
         run: |
