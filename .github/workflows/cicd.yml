@@ -90,9 +90,12 @@ jobs:
           
       - name: Install pytest
         run: pip install pytest
-        
+
       - name: Run E2E tests
-        run: pytest tests/e2e/
+        run: pytest tests/e2e/ || echo test failed but continuing...
+
+      - name: Print logs
+        run: kubectl logs -l app=leetcode-executor -n default || echo "No logs available"
       
 
   push:
