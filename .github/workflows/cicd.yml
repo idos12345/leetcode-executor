@@ -80,7 +80,8 @@ jobs:
 
       - name: Wait for app to be ready
         run: |
-          kubectl rollout status deployment/my-app --timeout=60s
+          kubectl rollout status deployment/leetcode_executor --timeout=60s
+          kubectl rollout status deployment/postgres --timeout=60s
 
       - name: Run E2E Tests
         run: |
