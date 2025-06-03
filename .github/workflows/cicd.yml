@@ -76,7 +76,7 @@ jobs:
 
       - name: Install app with Helm
         run: |
-          helm install my-app ./chart -f ./chart/values-ci.yaml -n default --wait --timeout 5m || echo "Helm failed but continuing..."
+          helm install my-app ./chart -f ./chart/values-ci.yaml -n default --wait --timeout 2m || echo "Helm failed but continuing..."
       - name: Debug Pod Status
         run: |
           kubectl get pods -n default
