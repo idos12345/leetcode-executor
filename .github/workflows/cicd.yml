@@ -71,6 +71,10 @@ jobs:
         run: |
           HOST_IP=$(ip route get 1 | awk '{print $7; exit}')
           echo "HOST_IP=$HOST_IP" >> $GITHUB_ENV
+      - name: Generate kind config with actual IP
+        run: |
+          cat <<EOF > kind-config-ci.yaml
+          cat kind-config-ci.yaml
       - name: Create kind cluster with kind-config-ci
         run: |
           kind create cluster --config kind-config-ci.yaml
