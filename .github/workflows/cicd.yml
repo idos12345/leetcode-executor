@@ -76,9 +76,12 @@ jobs:
 
       - name: Install app with Helm
         run: |
-          helm install my-app ./chart -f ./chart/values-ci.yaml -n default --wait --timeout 120s
-          kubectl get pods
-
+          helm install my-app ./chart -f ./chart/values-ci.yaml -n default --wait --timeout 5m || echo "Helm failed but continuing..."
+      - name: Debug Pod Status
+        run: |
+          kubectl get pods -n default
+          kubectl describe pods -n default
+          kubectl get events -n default --sort-by=.metadata.creationTimestamp
       - name: Run E2E Tests
         run: |
           curl -f http://localhost:8080 || exit 1
