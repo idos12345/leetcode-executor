@@ -15,6 +15,11 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
+  #Mocks
+  DATABASE_URL: sqlite://
+  K8S_JOB_YAML_PATH: /fake/job.yaml
+  REGISTRY_URL: localhost:5000
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
