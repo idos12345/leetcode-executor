@@ -65,14 +65,17 @@ jobs:
           curl -LO "https://dl.k8s.io/release/v1.28.2/bin/linux/amd64/kubectl"
           chmod +x kubectl && sudo mv kubectl /usr/local/bin/kubectl
 
-      - name: Create kind cluster
+      - name: Create kind cluster with kind-config-ci
         run: |
-          kind create cluster
+          kind create cluster --config kind-config-ci.yaml
 
       - name: Build and load Docker image
         run: |
           docker build -t leetcode-executor:latest .
           kind load docker-image leetcode-executor:latest
+          
+      - name: Set up local registry
+        run: docker run -d -p 5000:5000 --restart=always --name registry registry:2
 
       - name: Install app with Helm
         run: |
