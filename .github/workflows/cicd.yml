@@ -89,7 +89,7 @@ jobs:
           curl -f http://localhost:8080 || exit 1
           
       - name: Run E2E tests
-        run: python -m unittest discover -s tests/e2e
+        run: pytest tests/e2e/
       
 
   push:
