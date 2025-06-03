@@ -5,7 +5,6 @@ from unittest.mock import patch
 
 class TestUTestLogParser(unittest.TestCase):
 
-
     def _set_mock_settings(self, mock_settings):
         """Apply default mock values to settings."""
         mock_settings.DATABASE_URL = "sqlite:///:memory:"
