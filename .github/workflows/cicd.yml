@@ -76,12 +76,7 @@ jobs:
 
       - name: Install app with Helm
         run: |
-          helm install my-app ./chart -f ./chart/values-ci.yaml -n default
-
-      - name: Wait for app to be ready
-        run: |
-          kubectl rollout status deployment/leetcode_executor --timeout=60s
-          kubectl rollout status deployment/postgres --timeout=60s
+          helm install my-app ./chart -f ./chart/values-ci.yaml -n default --wait --timeout 120s
 
       - name: Run E2E Tests
         run: |
