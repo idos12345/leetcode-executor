@@ -1,6 +1,4 @@
 import unittest
-import base64
-from unittest.mock import patch, MagicMock, mock_open
 from string import Template
 from leetcode_execution_api.bl.image_factory.image_generator import ImageGenerator
 

@@ -1,9 +1,5 @@
 import time
-from functools import wraps
-
-import yaml
 from kubernetes import client, config
-from leetcode_execution_api.core.config import settings
 
 
 class K8sJobLogsFetcher:
