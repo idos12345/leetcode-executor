@@ -10,33 +10,42 @@ from resources.excution_script_templates.java.java_executor import java_template
 from resources.excution_script_templates.python.python_executor import python_template
 from docker.errors import BuildError, APIError
 from leetcode_execution_api.core.config import settings
+
 image_generator_parameters = {
     "python": {
         "code_template": python_template,
         "dockerfile": python_dockerfile,
         "tests_seperator": "\n\r",
-        "file_format": "py"
+        "file_format": "py",
     },
     "java": {
         "code_template": java_template,
         "dockerfile": java_dockerfile,
         "tests_seperator": "\n",
-        "file_format": "java"
-    }
+        "file_format": "java",
+    },
 }
 
 
 @abstractmethod
 class ImageGenerator:
 
-    def __init__(self, code_template: Template, dockerfile: str, file_format: str, tests_seperator):
+    def __init__(
+        self,
+        code_template: Template,
+        dockerfile: str,
+        file_format: str,
+        tests_seperator,
+    ):
         self.client = docker.from_env()
         self.code_template = code_template
         self.dockerfile_content = dockerfile
         self.tests_seperator = tests_seperator
         self.file_format = file_format
 
-    def build_image(self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]) -> None:
+    def build_image(
+        self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]
+    ) -> None:
         """
         Build docker image for the solution
         :param image_name: docker image name
@@ -46,12 +55,17 @@ class ImageGenerator:
 
         # Decode solution and tests
         decoded_solution_code = base64.b64decode(encoded_solution_code).decode("utf-8")
-        decoded_tests_code = [base64.b64decode(test_code).decode("utf-8") for test_code in encoded_tests_code]
+        decoded_tests_code = [
+            base64.b64decode(test_code).decode("utf-8")
+            for test_code in encoded_tests_code
+        ]
 
-        script_content = self.inject_code_to_test_script(decoded_solution_code, decoded_tests_code)
+        script_content = self.inject_code_to_test_script(
+            decoded_solution_code, decoded_tests_code
+        )
 
         local_registry = settings.REGISTRY_URL
-        image_full_name = f'{local_registry}/{image_name}:latest'
+        image_full_name = f"{local_registry}/{image_name}:latest"
 
         # Build app in tmp dir
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -66,26 +80,29 @@ class ImageGenerator:
 
             # Build the Docker image
             try:
-                image, logs = self.client.images.build(path=tmpdir, tag=f"{image_name}:latest")
+                image, logs = self.client.images.build(
+                    path=tmpdir, tag=f"{image_name}:latest"
+                )
                 print("✅ Build succeeded!")
                 print("Image ID:", image.id)
             except BuildError as e:
                 print("❌ Build failed!")
                 for line in e.build_log:
-                    print(line.get('stream', ''), end='')
+                    print(line.get("stream", ""), end="")
                 raise e
             except APIError as e:
                 print("❌ Docker API error:", str(e))
                 raise e
 
-            
             # Tag the image for local registry
             image.tag(image_full_name)
 
             print(f"Image tagged as {image_full_name}")
 
             # Push the image to local registry
-            push_logs = self.client.images.push(image_full_name, stream=True, decode=True)
+            push_logs = self.client.images.push(
+                image_full_name, stream=True, decode=True
+            )
             for log in push_logs:
                 print(log)
 
@@ -95,7 +112,9 @@ class ImageGenerator:
         indentation = " " * spaces
         return "\n".join(indentation + line for line in text.splitlines())
 
-    def inject_code_to_test_script(self, solution_code: str, tests_code_list: list[str]) -> str:
+    def inject_code_to_test_script(
+        self, solution_code: str, tests_code_list: list[str]
+    ) -> str:
         """
         Inject solution and tests code to test script
         :param solution_code: solution code
@@ -103,7 +122,9 @@ class ImageGenerator:
         :return: injected test script
         """
         tests = self.tests_seperator.join(tests_code_list)
-        test_script = self.code_template.substitute(solution=self.indent_string(solution_code), tests=self.indent_string(tests))
+        test_script = self.code_template.substitute(
+            solution=self.indent_string(solution_code), tests=self.indent_string(tests)
+        )
         print("Test script:")
         print(test_script)
         return test_script

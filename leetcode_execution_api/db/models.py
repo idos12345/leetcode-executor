@@ -12,7 +12,9 @@ class Question(Base):
     tests = relationship(
         "Test",
         backref="question",
-        cascade="all, delete-orphan",)
+        cascade="all, delete-orphan",
+    )
+
 
 class Test(Base):
     __tablename__ = "test"
@@ -21,6 +23,7 @@ class Test(Base):
     code = Column(String)
     question_id = Column(Integer, ForeignKey("question.id"))
     language_id = Column(Integer, ForeignKey("language.id"))
+
 
 class Language(Base):
     __tablename__ = "language"

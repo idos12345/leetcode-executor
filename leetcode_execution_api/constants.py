@@ -1,4 +1,1 @@
-language_to_id = {
-    "python": 1,
-    "java": 2
-}
+language_to_id = {"python": 1, "java": 2}

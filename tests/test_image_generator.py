@@ -9,8 +9,10 @@ class TestImageGenerator(unittest.TestCase):
 
     def setUp(self):
         self.mock_template = Template("Solution: $solution\nTests: $tests")
-        self.mock_dockerfile = "FROM python:3.12\nCMD [\"python\", \"TestSolution.py\"]"
-        self.image_generator = ImageGenerator(self.mock_template, self.mock_dockerfile, "py", "\n")
+        self.mock_dockerfile = 'FROM python:3.12\nCMD ["python", "TestSolution.py"]'
+        self.image_generator = ImageGenerator(
+            self.mock_template, self.mock_dockerfile, "py", "\n"
+        )
 
     def test_indent_string(self):
         text = "line1\nline2"
@@ -20,12 +22,13 @@ class TestImageGenerator(unittest.TestCase):
     def test_inject_code_to_test_script(self):
         solution_code = "def add(a, b):\n    return a + b"
         tests_code_list = ["assert add(2, 3) == 5", "assert add(5, 5) == 10"]
-        injected_script = self.image_generator.inject_code_to_test_script(solution_code, tests_code_list)
+        injected_script = self.image_generator.inject_code_to_test_script(
+            solution_code, tests_code_list
+        )
 
         self.assertIn("Solution:", injected_script)
         self.assertIn("Tests:", injected_script)
         self.assertIn("assert add(2, 3) == 5", injected_script)
-
 
 
 if __name__ == "__main__":

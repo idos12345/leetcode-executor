@@ -4,13 +4,19 @@ from leetcode_execution_api.db.models import Test
 import asyncio
 
 
-async def get_tests_by_question_and_language(question_id: int, language_id: int, db: AsyncSession):
+async def get_tests_by_question_and_language(
+    question_id: int, language_id: int, db: AsyncSession
+):
     print("Before query55")
     try:
         async with db.begin():
             result = await asyncio.wait_for(
-                db.execute(select(Test).where(Test.question_id == question_id, Test.language_id == language_id)),
-                timeout=3
+                db.execute(
+                    select(Test).where(
+                        Test.question_id == question_id, Test.language_id == language_id
+                    )
+                ),
+                timeout=3,
             )
     except asyncio.TimeoutError:
         print("❌ Query timed out")

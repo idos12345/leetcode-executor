@@ -2,13 +2,16 @@ import yaml
 from kubernetes import client, config
 from leetcode_execution_api.core.config import settings
 
+
 class K8sJobExecutor:
 
     def __init__(self):
         config.load_incluster_config()
 
     @staticmethod
-    def execute_job(image_name:str, yaml_path=settings.K8S_JOB_YAML_PATH, namespace="default") -> None:
+    def execute_job(
+        image_name: str, yaml_path=settings.K8S_JOB_YAML_PATH, namespace="default"
+    ) -> None:
         """
         Create and execute k8s job for image
         :param image_name:
@@ -28,22 +31,29 @@ class K8sJobExecutor:
                     spec=client.V1PodSpec(
                         containers=[
                             client.V1Container(
-                                name=job_manifest["spec"]["template"]["spec"]["containers"][0]["name"],
+                                name=job_manifest["spec"]["template"]["spec"][
+                                    "containers"
+                                ][0]["name"],
                                 image=f"{settings.REGISTRY_URL}/{image_name}:latest",
-                                image_pull_policy=job_manifest["spec"]["template"]["spec"]["containers"][0]["imagePullPolicy"],
+                                image_pull_policy=job_manifest["spec"]["template"][
+                                    "spec"
+                                ]["containers"][0]["imagePullPolicy"],
                                 env=[
                                     client.V1EnvVar(
-                                        name=env_var["name"],
-                                        value=env_var["value"]
-                                    ) for env_var in job_manifest["spec"]["template"]["spec"]["containers"][0].get("env", [])
+                                        name=env_var["name"], value=env_var["value"]
+                                    )
+                                    for env_var in job_manifest["spec"]["template"][
+                                        "spec"
+                                    ]["containers"][0].get("env", [])
                                 ],
                             )
                         ],
-                        restart_policy=job_manifest["spec"]["template"]["spec"]["restartPolicy"]
+                        restart_policy=job_manifest["spec"]["template"]["spec"][
+                            "restartPolicy"
+                        ],
                     )
                 )
-            )
+            ),
         )
-
 
         k8s_api.create_namespaced_job(namespace=namespace, body=job)

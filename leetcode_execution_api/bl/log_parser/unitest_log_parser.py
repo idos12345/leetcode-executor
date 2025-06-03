@@ -1,5 +1,6 @@
 import re
 
+
 class UTestLogParser:
 
     def __init__(self, language: str):
@@ -14,7 +15,7 @@ class UTestLogParser:
             raise Exception("Language not supported")
 
     @staticmethod
-    def __infer_solution_result_from_logs_for_java(logs:str) -> bool:
+    def __infer_solution_result_from_logs_for_java(logs: str) -> bool:
         tests_found = re.search(r" ([0-9]+) tests found", logs)
         tests_successful = re.search(r" ([0-9]+) tests successful", logs)
 
@@ -28,4 +29,3 @@ class UTestLogParser:
 
         last_log = logs.splitlines()[-1]
         return "OK" in last_log
-

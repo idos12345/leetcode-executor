@@ -6,15 +6,13 @@ from kubernetes import client, config
 from leetcode_execution_api.core.config import settings
 
 
-
-
 class K8sJobLogsFetcher:
 
     def __init__(self):
-       config.load_incluster_config()
+        config.load_incluster_config()
 
     @staticmethod
-    def fetch_logs(image_name:str, namespace="default") -> str:
+    def fetch_logs(image_name: str, namespace="default") -> str:
         """
         Fetch logs from k8s job
         :param image_name: docker image name
@@ -28,13 +26,15 @@ class K8sJobLogsFetcher:
             raise Exception("Job failed to complete")
 
         core_v1 = client.CoreV1Api()
-        pod_list = core_v1.list_namespaced_pod(namespace, label_selector=f"job-name={job_name}").items
+        pod_list = core_v1.list_namespaced_pod(
+            namespace, label_selector=f"job-name={job_name}"
+        ).items
         pod_name = pod_list[0].metadata.name
         logs = core_v1.read_namespaced_pod_log(name=pod_name, namespace=namespace)
         return logs
 
     @staticmethod
-    def wait_for_job(job_name:str, namespace="default", max_time=150, poll_interval=3):
+    def wait_for_job(job_name: str, namespace="default", max_time=150, poll_interval=3):
         """
         Wait for a Kubernetes Job to complete with a max timeout.
 
@@ -48,7 +48,9 @@ class K8sJobLogsFetcher:
 
         start_time = time.time()
         while time.time() - start_time < max_time:
-            job = batch_v1.read_namespaced_job_status(name=job_name, namespace=namespace).status
+            job = batch_v1.read_namespaced_job_status(
+                name=job_name, namespace=namespace
+            ).status
             if job.succeeded or (job.failed and job.failed == 1):
                 return True  # Job completed
             if job.failed and job.failed > 1:

@@ -32,10 +32,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # - name: Lint with flake8
-      #   run: |
-      #     pip install flake8
-      #     flake8 leetcode_execution_api tests --max-line-length=88
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 leetcode_execution_api tests --max-line-length=88
 
       - name: Run tests
         run: python -m unittest discover -s tests
