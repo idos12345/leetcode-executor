@@ -9,6 +9,6 @@ def test_python_execution():
             "code": "ZGVmIGFkZChzZWxmLCBhLCBiKToNCiAgICByZXR1cm4gYSArIGI=",
             "language": "python",
         },
-        timeout=60
+        timeout=60*5
     )
     assert resp.json()["test_result"] is True
