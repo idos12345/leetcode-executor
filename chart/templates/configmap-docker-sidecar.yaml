@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docker-sidecar-config
+data:
+  DOCKER_HOST: {{ .Values.docker.host }}
+  NO_PROXY: {{ .Values.proxy.NO_PROXY }}
+  no_proxy: {{ .Values.proxy.no_proxy }}
+  HTTP_PROXY: {{ .Values.proxy.HTTP_PROXY }}
+  HTTPS_PROXY: {{ .Values.proxy.HTTPS_PROXY }}
+  http_proxy: {{ .Values.proxy.http_proxy }}
+  https_proxy: {{ .Values.proxy.https_proxy }}

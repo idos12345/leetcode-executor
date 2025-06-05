@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leetcode-executor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leetcode-executor
+  template:
+    metadata:
+      labels:
+        app: leetcode-executor
+    spec:
+      serviceAccountName: job-creator
+      hostAliases:
+      - ip: "172.17.0.1"
+        hostnames:
+        - "host.docker.internal"
+      containers:
+        - name: leetcode-executor
+          image: leetcode-executor:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run
+          envFrom:
+            - configMapRef:
+                name: leetcode-executor-config
+        - name: dind
+          image: docker:dind
+          securityContext:
+            privileged: true
+          args: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run 
+            - name: dind-daemon-config
+              mountPath: /etc/docker/daemon.json
+              subPath: daemon.json  # Important so it mounts as a file
+          envFrom:
+            - configMapRef:
+                name: docker-sidecar-config
+      volumes:
+        - name: docker-sock
+          emptyDir: {}
+        - name: dind-daemon-config
+          configMap:
+            name: dind-daemon-config
