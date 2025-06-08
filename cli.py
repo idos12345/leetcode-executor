@@ -7,7 +7,7 @@ import time
 
 import requests
 
-API_URL = "http://127.0.0.1:8000/execute_solution/"
+API_URL = "http://127.0.0.1:8080/execute_solution/"
 
 
 def encode_file_to_base64(file_path):
