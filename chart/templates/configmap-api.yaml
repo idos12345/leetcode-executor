@@ -10,3 +10,4 @@ data:
   https_proxy: ""
   DATABASE_URL: {{ .Values.database.url }}
   REGISTRY_URL: {{ .Values.registry.url }}
+  NAMESPACE: {{ .Values.k8s.namespace }}

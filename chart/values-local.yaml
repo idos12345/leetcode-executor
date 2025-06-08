@@ -1,13 +1,13 @@
 docker:
   host: "unix:///var/run/docker.sock"
-  insecureRegistry: "host.docker.internal:5000"
+  insecureRegistry: "7.182.100.117:5000:5000"
 database:
   url: "postgresql+asyncpg://admin:root@postgres-service:5432/test_db"
   POSTGRES_USER: "admin"
   POSTGRES_PASSWORD: "root"
   POSTGRES_DB: "test_db"
 registry:
-  url: "host.docker.internal:5000"
+  url: "7.182.100.117:5000"
 proxy:
   http_proxy: "http://7.182.101.51:3128"
   https_proxy: "http://7.182.101.51:3128"
@@ -15,3 +15,5 @@ proxy:
   HTTPS_PROXY: "http://7.182.101.51:3128"
   NO_PROXY: "localhost,127.0.0.1,10.0.0.0/8"
   no_proxy: "localhost,127.0.0.1,10.0.0.0/8"
+k8s:
+  namespace: "default"
