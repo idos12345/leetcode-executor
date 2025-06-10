@@ -17,3 +17,5 @@ proxy:
   no_proxy: "localhost,127.0.0.1,10.0.0.0/8"
 k8s:
   namespace: "ido-leetcode"
+api:
+  image: "swr.tr-west-1.myhuaweicloud.com/ido/leetcode-executor:latest"

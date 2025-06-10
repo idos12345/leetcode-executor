@@ -15,7 +15,7 @@ spec:
       serviceAccountName: job-creator
       containers:
         - name: leetcode-executor
-          image: swr.tr-west-1.myhuaweicloud.com/ido/leetcode-executor
+          image: {{ .Values.api.IMAGE }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
