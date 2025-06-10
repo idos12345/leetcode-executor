@@ -17,12 +17,15 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: leetcode-executor
 
   #Mocks
   DATABASE_URL: sqlite://
   K8S_JOB_YAML_PATH: /fake/job.yaml
   REGISTRY_URL: localhost:5000
+  NAMESPACE: dummy
+  SWR_LOGIN_U: dummy
+  SWR_LOGIN_P: dummy
 
 jobs:
   build-and-unit-tests:
@@ -83,7 +86,7 @@ jobs:
           nodes:
           - role: control-plane
             extraPortMappings:
-            - containerPort: 30080
+            - containerPort: 30090
               hostPort: 8080
               protocol: TCP
           containerdConfigPatches:
@@ -115,6 +118,7 @@ jobs:
         run: |
           kubectl get pods -n default
           kubectl describe pods -n default
+          kubectl logs -l app=leetcode-executor -n default --tail=-1 --timestamps
       - name: Run health check
         run: |
           curl -f http://localhost:8080 || exit 1
@@ -131,27 +135,49 @@ jobs:
           kubectl get pods
           kubectl describe pods 
           curl localhost:5000/v2/_catalog
-
-      
-
   push:
+    if: github.event_name != 'pull_request'
     needs: e2e-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Log in to GitHub Container Registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" \
-            | docker login ${{ env.REGISTRY }} -u "${{ github.actor }}" --password-stdin
+      - name: Log in to SWR
+        run: echo "${{ secrets.SWR_P}}" | docker login --username="${{ secrets.SWR_U }}" --password-stdin swr.tr-west-1.myhuaweicloud.com
 
       - name: Build Docker image
         run: |
-          IMAGE=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          IMAGE=swr.tr-west-1.myhuaweicloud.com/ido/${{ env.IMAGE_NAME }}:latest
           docker build -t $IMAGE .
 
       - name: Push Docker image
         run: |
-          IMAGE=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          IMAGE=swr.tr-west-1.myhuaweicloud.com/ido/${{ env.IMAGE_NAME }}:latest
           docker push $IMAGE
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: push
+    name: Helm Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" | base64 -d > ~/.kube/config
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.13.3 
+
+      - name: Helm Upgrade/Install
+        run: |
+          helm upgrade leetcode -f ./chart/values-prod.yaml ./chart \
+            --namespace ido-leetcode \
+            
+

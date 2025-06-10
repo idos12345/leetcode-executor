@@ -1,5 +1,5 @@
 java_dockerfile = """
-FROM java-junit-base:latest
+FROM swr.tr-west-1.myhuaweicloud.com/ido/java-junit-base:latest
 
 WORKDIR /app
 

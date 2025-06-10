@@ -31,11 +31,11 @@ image_generator_parameters = {
 class ImageGenerator:
 
     def __init__(
-        self,
-        code_template: Template,
-        dockerfile: str,
-        file_format: str,
-        tests_seperator,
+            self,
+            code_template: Template,
+            dockerfile: str,
+            file_format: str,
+            tests_seperator,
     ):
         self.client = docker.from_env()
         self.code_template = code_template
@@ -44,7 +44,7 @@ class ImageGenerator:
         self.file_format = file_format
 
     def build_image(
-        self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]
+            self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]
     ) -> None:
         """
         Build docker image for the solution
@@ -63,9 +63,7 @@ class ImageGenerator:
         script_content = self.inject_code_to_test_script(
             decoded_solution_code, decoded_tests_code
         )
-
-        local_registry = settings.REGISTRY_URL
-        image_full_name = f"{local_registry}/{image_name}:latest"
+        image_full_name = f"{settings.REGISTRY_URL}/{image_name}:latest"
 
         # Build app in tmp dir
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -101,7 +99,10 @@ class ImageGenerator:
 
             # Push the image to local registry
             push_logs = self.client.images.push(
-                image_full_name, stream=True, decode=True
+                image_full_name, auth_config={
+                    "username": settings.SWR_LOGIN_U,
+                    "password": settings.SWR_LOGIN_P
+                }, stream=True, decode=True
             )
             for log in push_logs:
                 print(log)
@@ -113,7 +114,7 @@ class ImageGenerator:
         return "\n".join(indentation + line for line in text.splitlines())
 
     def inject_code_to_test_script(
-        self, solution_code: str, tests_code_list: list[str]
+            self, solution_code: str, tests_code_list: list[str]
     ) -> str:
         """
         Inject solution and tests code to test script

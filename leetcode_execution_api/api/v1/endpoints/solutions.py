@@ -15,7 +15,7 @@ from leetcode_execution_api.services.test_service import (
 )
 from leetcode_execution_api.constants import language_to_id
 from sqlalchemy import text
-
+from leetcode_execution_api.core.config import settings
 solution_router = APIRouter()
 
 
@@ -27,7 +27,7 @@ async def ping_db(session: AsyncSession = Depends(get_db)):
 
 @solution_router.post("/execute_solution")
 async def execute_solution(
-    solution: Solution, db: AsyncSession = Depends(get_db)
+        solution: Solution, db: AsyncSession = Depends(get_db)
 ) -> dict:
     """
     execute solution as a k8s job
@@ -63,13 +63,13 @@ async def execute_solution(
     print(
         f"Executing k8s job for question_id: {solution.question_id} and language: {language}"
     )
-    K8sJobExecutor().execute_job(image_name)
+    K8sJobExecutor().execute_job(image_name, namespace=settings.NAMESPACE)
 
     # Fetch logs from k8s
     print(
         f"Fetching logs for question_id: {solution.question_id} and language: {language}"
     )
-    logs = K8sJobLogsFetcher().fetch_logs(image_name)
+    logs = K8sJobLogsFetcher().fetch_logs(image_name, namespace=settings.NAMESPACE)
 
     # Retrieve result from logs
     print(

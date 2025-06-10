@@ -1,13 +1,13 @@
 docker:
   host: "unix:///var/run/docker.sock"
-  insecureRegistry: "192.168.1.195:5000"
+  insecureRegistry: "0.0.0.0"
 database:
   url: "postgresql+asyncpg://admin:root@postgres-service:5432/test_db"
   POSTGRES_USER: "admin"
   POSTGRES_PASSWORD: "root"
   POSTGRES_DB: "test_db"
 registry:
-  url: "192.168.1.195:5000"
+  url: "swr.tr-west-1.myhuaweicloud.com/ido"
 proxy:
   http_proxy: ""
   https_proxy: ""
@@ -16,7 +16,8 @@ proxy:
   NO_PROXY: "localhost,127.0.0.1,10.0.0.0/8"
   no_proxy: "localhost,127.0.0.1,10.0.0.0/8"
 k8s:
-  namespace: "default"
+  namespace: "ido-leetcode"
 api:
-  image: "leetcode-executor:latest"
-  imagePullPolicy: "IfNotPresent"
+  image: "swr.tr-west-1.myhuaweicloud.com/ido/leetcode-executor:latest"
+  imagePullPolicy: "Always"
+
