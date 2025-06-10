@@ -10,7 +10,4 @@ spec:
         image: ""
         imagePullPolicy: IfNotPresent
       restartPolicy: Never
-      imagePullSecrets:
-        - name: swr-secret
-          optional: true
 
