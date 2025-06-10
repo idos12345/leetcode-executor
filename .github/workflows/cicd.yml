@@ -173,6 +173,7 @@ jobs:
 
       - name: Helm Upgrade/Install
         run: |
-          helm upgrade --install leetcode ./chart \
+          helm upgrade leetcode -f ./chart/values-prod.yaml ./chart \
             --namespace ido-leetcode \
+            
 
