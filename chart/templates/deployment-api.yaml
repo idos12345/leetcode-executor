@@ -27,6 +27,7 @@ spec:
                 name: leetcode-executor-config
             - secretRef:
                 name: leetcode-executor-secrets
+                optional: true
         - name: dind
           image: docker:dind
           securityContext:

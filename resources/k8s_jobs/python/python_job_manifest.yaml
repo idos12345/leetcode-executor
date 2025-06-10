@@ -12,4 +12,5 @@ spec:
       restartPolicy: Never
       imagePullSecrets:
         - name: swr-secret
+          optional: true
 
