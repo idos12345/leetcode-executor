@@ -19,3 +19,5 @@ k8s:
   namespace: "ido-leetcode"
 api:
   image: "swr.tr-west-1.myhuaweicloud.com/ido/leetcode-executor:latest"
+  imagePullPolicy: "Always"
+

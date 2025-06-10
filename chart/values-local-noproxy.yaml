@@ -19,3 +19,4 @@ k8s:
   namespace: "default"
 api:
   image: "leetcode-executor:latest"
+  imagePullPolicy: "IfNotPresent"

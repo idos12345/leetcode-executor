@@ -16,7 +16,7 @@ spec:
       containers:
         - name: leetcode-executor
           image: {{ .Values.api.image }}
-          imagePullPolicy: Always
+          imagePullPolicy: {{ .Values.api.imagePullPolicy }}
           ports:
             - containerPort: 8000
           volumeMounts:
