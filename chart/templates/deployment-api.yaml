@@ -15,7 +15,7 @@ spec:
       serviceAccountName: job-creator
       containers:
         - name: leetcode-executor
-          image: {{ .Values.api.image }}
+          image: "{{ .Values.api.image }}:{{ .Values.api.tag }}"
           imagePullPolicy: {{ .Values.api.imagePullPolicy }}
           ports:
             - containerPort: 8000
