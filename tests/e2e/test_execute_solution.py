@@ -3,7 +3,7 @@ import requests
 
 def test_python_execution():
     resp = requests.post(
-        "http://localhost:8000/execute_solution",
+        "http://localhost:30090/execute_solution",
         json={
             "question_id": 1,
             "code": "ZGVmIGFkZChzZWxmLCBhLCBiKToNCiAgICByZXR1cm4gYSArIGI=",
