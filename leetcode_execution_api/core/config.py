@@ -9,8 +9,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     REGISTRY_URL: str
     NAMESPACE: str
-    SWR_LOGIN_U: Optional[str]
-    SWR_LOGIN_P: Optional[str]
+    SWR_LOGIN_U: Optional[str] = None
+    SWR_LOGIN_P: Optional[str] = None
 
     class Config:
         env_file = ".env"
