@@ -116,6 +116,7 @@ jobs:
         run: |
           kubectl get pods -n default
           kubectl describe pods -n default
+          kubectl logs -l app=leetcode-executor -n default --tail=-1 --timestamps
       - name: Run health check
         run: |
           curl -f http://localhost:8000 || exit 1
