@@ -84,7 +84,7 @@ jobs:
           nodes:
           - role: control-plane
             extraPortMappings:
-            - containerPort: 30080
+            - containerPort: 30090
               hostPort: 8080
               protocol: TCP
           containerdConfigPatches:
@@ -119,7 +119,7 @@ jobs:
           kubectl logs -l app=leetcode-executor -n default --tail=-1 --timestamps
       - name: Run health check
         run: |
-          curl -f http://localhost:8000 || exit 1
+          curl -f http://localhost:8080 || exit 1
           
       - name: Install pytest
         run: pip install pytest
