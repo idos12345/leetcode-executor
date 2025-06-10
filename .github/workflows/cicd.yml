@@ -8,8 +8,6 @@ permissions:
 
 on:
   push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -23,6 +21,9 @@ env:
   DATABASE_URL: sqlite://
   K8S_JOB_YAML_PATH: /fake/job.yaml
   REGISTRY_URL: localhost:5000
+  NAMESPACE: dummy
+  SWR_LOGIN_U: dummy
+  SWR_LOGIN_P: dummy
 
 jobs:
   build-and-unit-tests:
