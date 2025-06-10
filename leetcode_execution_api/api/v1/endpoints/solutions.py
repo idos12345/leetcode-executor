@@ -63,13 +63,13 @@ async def execute_solution(
     print(
         f"Executing k8s job for question_id: {solution.question_id} and language: {language}"
     )
-    K8sJobExecutor().execute_job(image_name, settings.NAMESPACE)
+    K8sJobExecutor().execute_job(image_name, namespace=settings.NAMESPACE)
 
     # Fetch logs from k8s
     print(
         f"Fetching logs for question_id: {solution.question_id} and language: {language}"
     )
-    logs = K8sJobLogsFetcher().fetch_logs(image_name, settings.NAMESPACE)
+    logs = K8sJobLogsFetcher().fetch_logs(image_name, namespace=settings.NAMESPACE)
 
     # Retrieve result from logs
     print(

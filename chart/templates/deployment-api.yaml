@@ -13,14 +13,10 @@ spec:
         app: leetcode-executor
     spec:
       serviceAccountName: job-creator
-      hostAliases:
-      - ip: "172.17.0.1"
-        hostnames:
-        - "host.docker.internal"
       containers:
         - name: leetcode-executor
-          image: leetcode-executor:latest
-          imagePullPolicy: IfNotPresent
+          image: swr.tr-west-1.myhuaweicloud.com/ido/leetcode-executor
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           volumeMounts:
@@ -29,6 +25,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: leetcode-executor-config
+            - secretRef:
+                name: leetcode-executor-secrets
         - name: dind
           image: docker:dind
           securityContext:

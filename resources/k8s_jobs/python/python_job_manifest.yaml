@@ -10,4 +10,6 @@ spec:
         image: registry:5000/$image_name:latest
         imagePullPolicy: IfNotPresent
       restartPolicy: Never
+      imagePullSecrets:
+        - name: swr-secret
 

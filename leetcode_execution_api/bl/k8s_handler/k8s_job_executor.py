@@ -11,7 +11,7 @@ class K8sJobExecutor:
 
     @staticmethod
     def execute_job(
-        image_name: str, yaml_path=constants.K8S_JOB_YAML_PATH, namespace="default"
+            image_name: str, yaml_path=constants.K8S_JOB_YAML_PATH, namespace="default"
     ) -> None:
         """
         Create and execute k8s job for image
@@ -28,6 +28,7 @@ class K8sJobExecutor:
             kind=job_manifest["kind"],
             metadata=client.V1ObjectMeta(name=f"{image_name}-job"),
             spec=client.V1JobSpec(
+                ttl_seconds_after_finished=60,
                 template=client.V1PodTemplateSpec(
                     spec=client.V1PodSpec(
                         containers=[
@@ -52,9 +53,11 @@ class K8sJobExecutor:
                         restart_policy=job_manifest["spec"]["template"]["spec"][
                             "restartPolicy"
                         ],
+                        image_pull_secrets=[
+                            client.V1LocalObjectReference(name="swr-secret")
+                        ],
                     )
                 )
             ),
         )
-
         k8s_api.create_namespaced_job(namespace=namespace, body=job)
