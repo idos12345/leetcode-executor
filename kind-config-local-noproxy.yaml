@@ -8,5 +8,5 @@ nodes:
     protocol: TCP
 containerdConfigPatches:
 - |-
-  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."7.182.100.117:5000"]
-    endpoint = ["http://7.182.100.117:5000"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."192.168.1.195:5000"]
+    endpoint = ["http://192.168.1.195:5000"]

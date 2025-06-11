@@ -8,6 +8,7 @@ database:
   POSTGRES_DB: "test_db"
 registry:
   url: "swr.tr-west-1.myhuaweicloud.com/ido"
+  auth_needed: true
 proxy:
   http_proxy: ""
   https_proxy: ""

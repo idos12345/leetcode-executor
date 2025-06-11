@@ -31,11 +31,11 @@ image_generator_parameters = {
 class ImageGenerator:
 
     def __init__(
-            self,
-            code_template: Template,
-            dockerfile: str,
-            file_format: str,
-            tests_seperator,
+        self,
+        code_template: Template,
+        dockerfile: str,
+        file_format: str,
+        tests_seperator,
     ):
         self.client = docker.from_env()
         self.code_template = code_template
@@ -44,7 +44,7 @@ class ImageGenerator:
         self.file_format = file_format
 
     def build_image(
-            self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]
+        self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]
     ) -> None:
         """
         Build docker image for the solution
@@ -63,7 +63,7 @@ class ImageGenerator:
         script_content = self.inject_code_to_test_script(
             decoded_solution_code, decoded_tests_code
         )
-        image_full_name = f"{settings.REGISTRY_URL}/{image_name}:latest"
+        image_full_name = f"{settings.REGISTRY_URL}/{image_name}"
 
         # Build app in tmp dir
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -82,7 +82,7 @@ class ImageGenerator:
                     path=tmpdir, tag=f"{image_name}:latest"
                 )
                 print("✅ Build succeeded!")
-                print("Image ID:", image.id)
+                print("Image ID:", image.short_id)
             except BuildError as e:
                 print("❌ Build failed!")
                 for line in e.build_log:
@@ -92,20 +92,51 @@ class ImageGenerator:
                 print("❌ Docker API error:", str(e))
                 raise e
 
-            # Tag the image for local registry
-            image.tag(image_full_name)
+            # Tag the image for registry
+            image.tag(image_full_name, tag="latest")
 
             print(f"Image tagged as {image_full_name}")
 
-            # Push the image to local registry
-            push_logs = self.client.images.push(
-                image_full_name, auth_config={
-                    "username": settings.SWR_LOGIN_U,
-                    "password": settings.SWR_LOGIN_P
-                }, stream=True, decode=True
-            )
+            # Push the image to registry
+
+            if not settings.REGISTRY_AUTH_NEEDED:
+                push_logs = self.client.images.push(
+                    image_full_name,
+                    auth_config={
+                        "username": settings.SWR_LOGIN_U,
+                        "password": settings.SWR_LOGIN_P,
+                    },
+                    stream=True,
+                    decode=True,
+                )
+            else:
+                push_logs = self.client.images.push(
+                    f"{image_full_name}:latest", stream=True, decode=True
+                )
+
             for log in push_logs:
-                print(log)
+                if "error" in log:
+                    print("❌ Push failed:", log["error"])
+                    raise Exception(f"Failed to push image: {log['error']}")
+            print(f"Image {image_full_name} pushed successfully to registry.")
+
+            print("Delete image from local docker")
+            self.client.images.remove(image.id, force=True)
+
+            # List dangling images (untagged)
+            print("Clean dangling images from local docker")
+            dangling_images = [
+                img for img in self.client.images.list(filters={"dangling": True})
+            ]
+
+            for img in dangling_images:
+                try:
+                    self.client.images.remove(img.id, force=True)
+                    print(f"Removed image {img.id}")
+                except Exception as e:
+                    print(f"Failed to remove {img.id}: {e}")
+
+            print(f"Image {image_name} removed from local docker.")
 
     @staticmethod
     def indent_string(text: str, spaces: int = 4) -> str:
@@ -114,7 +145,7 @@ class ImageGenerator:
         return "\n".join(indentation + line for line in text.splitlines())
 
     def inject_code_to_test_script(
-            self, solution_code: str, tests_code_list: list[str]
+        self, solution_code: str, tests_code_list: list[str]
     ) -> str:
         """
         Inject solution and tests code to test script
