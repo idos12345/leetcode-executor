@@ -7,7 +7,6 @@ import asyncio
 async def get_tests_by_question_and_language(
     question_id: int, language_id: int, db: AsyncSession
 ):
-    print("Before query55")
     try:
         async with db.begin():
             result = await asyncio.wait_for(

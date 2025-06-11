@@ -3,7 +3,7 @@ import base64
 
 import requests
 
-DEFAULT_API_URL = "http://213.250.144.112:30090/execute_solution/"
+DEFAULT_API_URL = "http://213.250.144.112:30090"
 
 
 def encode_file_to_base64(file_path):
@@ -23,7 +23,7 @@ def execute_solution(question_id, file_path, language, api_url=DEFAULT_API_URL):
     }
 
     print("\n⏳ Processing...\n")
-    response = requests.post(api_url, json=payload)
+    response = requests.post(api_url + "/execute_solution/", json=payload)
 
     if response.status_code == 200:
         result = response.json()
