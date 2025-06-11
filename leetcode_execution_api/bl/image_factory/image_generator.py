@@ -99,7 +99,7 @@ class ImageGenerator:
 
             # Push the image to registry
 
-            if not settings.REGISTRY_AUTH_NEEDED:
+            if settings.REGISTRY_AUTH_NEEDED:
                 push_logs = self.client.images.push(
                     image_full_name,
                     auth_config={
