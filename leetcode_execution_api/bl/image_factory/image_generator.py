@@ -31,11 +31,11 @@ image_generator_parameters = {
 class ImageGenerator:
 
     def __init__(
-            self,
-            code_template: Template,
-            dockerfile: str,
-            file_format: str,
-            tests_seperator,
+        self,
+        code_template: Template,
+        dockerfile: str,
+        file_format: str,
+        tests_seperator,
     ):
         self.client = docker.from_env()
         self.code_template = code_template
@@ -44,7 +44,7 @@ class ImageGenerator:
         self.file_format = file_format
 
     def build_image(
-            self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]
+        self, image_name: str, encoded_solution_code: str, encoded_tests_code: list[str]
     ) -> None:
         """
         Build docker image for the solution
@@ -101,29 +101,33 @@ class ImageGenerator:
 
             if not settings.REGISTRY_AUTH_NEEDED:
                 push_logs = self.client.images.push(
-                    image_full_name, auth_config={
+                    image_full_name,
+                    auth_config={
                         "username": settings.SWR_LOGIN_U,
-                        "password": settings.SWR_LOGIN_P
-                    }, stream=True, decode=True
+                        "password": settings.SWR_LOGIN_P,
+                    },
+                    stream=True,
+                    decode=True,
                 )
             else:
                 push_logs = self.client.images.push(
                     f"{image_full_name}:latest", stream=True, decode=True
                 )
-            
+
             for log in push_logs:
-                if 'error' in log:
-                    print("❌ Push failed:", log['error'])
+                if "error" in log:
+                    print("❌ Push failed:", log["error"])
                     raise Exception(f"Failed to push image: {log['error']}")
             print(f"Image {image_full_name} pushed successfully to registry.")
 
             print("Delete image from local docker")
             self.client.images.remove(image.id, force=True)
 
-            
             # List dangling images (untagged)
             print("Clean dangling images from local docker")
-            dangling_images = [img for img in self.client.images.list(filters={"dangling": True})]
+            dangling_images = [
+                img for img in self.client.images.list(filters={"dangling": True})
+            ]
 
             for img in dangling_images:
                 try:
@@ -131,9 +135,8 @@ class ImageGenerator:
                     print(f"Removed image {img.id}")
                 except Exception as e:
                     print(f"Failed to remove {img.id}: {e}")
-                    
-            print(f"Image {image_name} removed from local docker.")
 
+            print(f"Image {image_name} removed from local docker.")
 
     @staticmethod
     def indent_string(text: str, spaces: int = 4) -> str:
@@ -142,7 +145,7 @@ class ImageGenerator:
         return "\n".join(indentation + line for line in text.splitlines())
 
     def inject_code_to_test_script(
-            self, solution_code: str, tests_code_list: list[str]
+        self, solution_code: str, tests_code_list: list[str]
     ) -> str:
         """
         Inject solution and tests code to test script
