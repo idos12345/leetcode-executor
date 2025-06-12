@@ -7,7 +7,14 @@ COPY . /leetcode_execution_api
 RUN apt-get update && apt-get install -y python3-setuptools && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip and install setuptools (which includes distutils)
-RUN pip install --no-cache-dir --upgrade pip setuptools
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gnupg \
+        ca-certificates \
+        debian-archive-keyring && \
+    apt-get install -y --no-install-recommends \
+        python3-setuptools && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
