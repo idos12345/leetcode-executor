@@ -4,9 +4,9 @@ metadata:
   name: docker-sidecar-config
 data:
   DOCKER_HOST: {{ .Values.docker.host }}
-  NO_PROXY: {{ .Values.proxy.NO_PROXY }}
-  no_proxy: {{ .Values.proxy.no_proxy }}
-  HTTP_PROXY: {{ .Values.proxy.HTTP_PROXY }}
-  HTTPS_PROXY: {{ .Values.proxy.HTTPS_PROXY }}
-  http_proxy: {{ .Values.proxy.http_proxy }}
-  https_proxy: {{ .Values.proxy.https_proxy }}
+  NO_PROXY: {{ .Values.proxy.NO_PROXY | quote }}
+  no_proxy: {{ .Values.proxy.no_proxy | quote }}
+  HTTP_PROXY: {{ .Values.proxy.HTTP_PROXY | quote}}
+  HTTPS_PROXY: {{ .Values.proxy.HTTPS_PROXY | quote}}
+  http_proxy: {{ .Values.proxy.http_proxy | quote}}
+  https_proxy: {{ .Values.proxy.https_proxy | quote}}
