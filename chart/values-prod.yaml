@@ -19,7 +19,7 @@ registry:
 k8s:
   namespace: "ido-leetcode"
 api:
-  image: "swr.tr-west-1.myhuaweicloud.com/ido/leetcode-executor"
+  image: "swr.ap-southeast-3.myhuaweicloud.com/ido/leetcode-executor"
   tag: ""
   imagePullPolicy: "Always"
 

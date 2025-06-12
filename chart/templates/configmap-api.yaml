@@ -4,6 +4,10 @@ metadata:
   name: leetcode-executor-config
 data:
   DOCKER_HOST: {{ .Values.docker.host }}
+#  HTTP_PROXY: ""
+#  HTTPS_PROXY: ""
+#  http_proxy: ""
+#  https_proxy: ""
   DATABASE_URL: {{ .Values.database.url }}
   REGISTRY_URL: {{ .Values.registry.url }}
   REGISTRY_AUTH_NEEDED: {{ .Values.registry.auth_needed | quote}}
