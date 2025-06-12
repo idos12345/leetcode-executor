@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.11
 
 WORKDIR /leetcode_execution_api
 COPY . /leetcode_execution_api
