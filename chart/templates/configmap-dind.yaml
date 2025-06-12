@@ -5,9 +5,9 @@ metadata:
 data:
   daemon.json: |-
     {
-    "proxies": {
-    "http-proxy": "{{ .Values.proxy.http_proxy | quote }}",
-    "https-proxy": "{{ .Values.proxy.https_proxy | quote}}"
-    },
+#    "proxies": {
+#    "http-proxy": "{{ .Values.proxy.http_proxy | quote }}",
+#    "https-proxy": "{{ .Values.proxy.https_proxy | quote}}"
+#    },
       "insecure-registries": ["{{ .Values.docker.insecureRegistry }}"]
     }
