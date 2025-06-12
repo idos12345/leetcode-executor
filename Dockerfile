@@ -1,20 +1,13 @@
-FROM python:3.11
+FROM python:3.10
 
 WORKDIR /leetcode_execution_api
 COPY . /leetcode_execution_api
 
-# Ensure system packages are updated
-RUN apt-get update && apt-get install -y python3-setuptools && rm -rf /var/lib/apt/lists/*
-
-# Upgrade pip and install setuptools (which includes distutils)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        gnupg \
-        ca-certificates \
-        debian-archive-keyring && \
-    apt-get install -y --no-install-recommends \
-        python3-setuptools && \
-    rm -rf /var/lib/apt/lists/*
+## Ensure system packages are updated
+#RUN apt-get update && apt-get install -y python3-setuptools && rm -rf /var/lib/apt/lists/*
+#
+## Upgrade pip and install setuptools (which includes distutils)
+#RUN pip install --no-cache-dir --upgrade pip setuptools
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
