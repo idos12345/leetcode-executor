@@ -67,7 +67,7 @@ async def execute_solution(
 
     # Fetch logs from k8s
     print(
-        f"Fetching logs for question_id: {solution.question_id} and language: {language}"
+        f"Fetching logs for question_id: {solution.question_id} and language: {language}."
     )
     logs = K8sJobLogsFetcher().fetch_logs(image_name, namespace=settings.NAMESPACE)
 
